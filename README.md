@@ -1,2 +1,2 @@
 # ISE2025_L08L09L10_SERGIO_PIQUERAS_MORENO
-PRACTICA 1 DE ISE Universidad Politecnica de Madrid
+Repositorio de la asignatura ISE de la Universidad Politecnica de Madrid
