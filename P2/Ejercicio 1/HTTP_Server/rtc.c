@@ -112,7 +112,8 @@ void RTC_alarma(RTC_HandleTypeDef *hrtc) {
   // Ignoramos horas y fecha => suena cada vez que segundos = 0 (cada minuto)
   sAlarm.AlarmMask = RTC_ALARMMASK_HOURS 
                    | RTC_ALARMMASK_MINUTES 
-                   | RTC_ALARMMASK_DATEWEEKDAY;
+                   | RTC_ALARMMASK_DATEWEEKDAY
+                   | RTC_ALARMDATEWEEKDAYSEL_DATE ;
   sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
 
   sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
@@ -126,4 +127,67 @@ void RTC_alarma(RTC_HandleTypeDef *hrtc) {
   HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
 	
 }
+void set_rtc_year(int year) {
+  // Ajustar la fecha/hora usando HAL
+  //  1) Leer la fecha/hora actual
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+  HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+  HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
 
+  //  2) Cambiar solo el campo year (restando 2000 si trabajas en binario)
+  sDate.Year = (uint8_t)(year - 2000);
+
+  //  3) Volver a programar
+  HAL_RTC_SetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+}
+
+void set_rtc_month(int month) {
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+  HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+  HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+
+  sDate.Month = (uint8_t)month;
+  HAL_RTC_SetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+}
+
+void set_rtc_day(int day) {
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+  HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+  HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+
+  sDate.Date = (uint8_t)day;
+  HAL_RTC_SetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+}
+
+void set_rtc_hour(int hour) {
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+  HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+  HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+
+  sTime.Hours = (uint8_t)hour;
+  HAL_RTC_SetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+}
+
+void set_rtc_minute(int minute) {
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+  HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+  HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+
+  sTime.Minutes = (uint8_t)minute;
+  HAL_RTC_SetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+}
+
+void set_rtc_second(int second) {
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+  HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+  HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+
+  sTime.Seconds = (uint8_t)second;
+  HAL_RTC_SetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+}

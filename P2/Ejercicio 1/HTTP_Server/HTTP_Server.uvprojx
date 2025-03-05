@@ -10,7 +10,7 @@
       <TargetName>Debug</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -399,14 +399,14 @@
               <FilePath>.\HTTP_Server_CGI.c</FilePath>
             </File>
             <File>
-              <FileName>Web.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>Web\Web.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\stm32f4xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>Web.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Web.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -507,6 +507,16 @@
               <FileName>pabb.gif</FileName>
               <FileType>9</FileType>
               <FilePath>.\Web\pabb.gif</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.cgi</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\rtc.cgi</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.cgx</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\rtc.cgx</FilePath>
             </File>
           </Files>
         </Group>

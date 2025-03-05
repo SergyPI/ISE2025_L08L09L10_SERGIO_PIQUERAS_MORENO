@@ -14,6 +14,8 @@
 #include "leds.h"
 #include "lcd.h"
 #include "adc1.h"
+#include <stdlib.h>                     //para el rtc
+#include "rtc.h"
 #define LCD 0x01                        //define la señal para LCD
 //#include "Board_LED.h"                  // ::Board Support:LED
 
@@ -44,6 +46,7 @@ typedef struct {
 } MY_BUF;
 #define MYBUF(p)        ((MY_BUF *)p)
 
+RTC_DateTypeDef sdatestructure;
 // Process query string received by GET request.
 void netCGI_ProcessQuery (const char *qstr) {
   netIF_Option opt = netIF_OptionMAC_Address;
@@ -245,6 +248,23 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       netIF_GetOption (NET_IF_CLASS_ETH, opt, ip_addr, sizeof(ip_addr));
       netIP_ntoa (typ, ip_addr, ip_string, sizeof(ip_string));
       len = (uint32_t)sprintf (buf, &env[5], ip_string);
+			 // Compare 'env' with the token name in HTML
+  if (strcmp(env, "time") == 0) {
+    // Format as hh:mm:ss
+    sprintf(buf, "%02d:%02d:%02d",
+            stimestructure.Hours,
+            stimestructure.Minutes,
+            stimestructure.Seconds);
+    return (strlen(buf));
+  }
+  else if (strcmp(env, "date") == 0) {
+    // Format as dd-mm-yyyy (or mm-dd-yyyy as you prefer)
+    sprintf(buf, "%02d-%02d-%04d",
+            sdatestructure.Date,
+            sdatestructure.Month,
+            2000 + sdatestructure.Year);
+    return (strlen(buf));
+  }
       break;
 
     case 'b':
@@ -369,6 +389,72 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
           break;
       }
       break;
+      
+   case 'm':
+    switch (env[2]) {
+        case '1': // Año (YYYY)
+            {
+                int year = atoi(&env[4]); // Asumiendo m1=YYYY
+                // Validar el año
+                if (year >= 2000 && year <= 2100) { // Ejemplo de rango
+                    set_rtc_year(year); // Función para configurar el año en el RTC
+                }
+            }
+            break;
+
+        case '2': // Mes (MM)
+            {
+                int month = atoi(&env[4]); // Asumiendo m2=MM
+                // Validar el mes
+                if (month >= 1 && month <= 12) {
+                    set_rtc_month(month); // Función para configurar el mes en el RTC
+                }
+            }
+            break;
+
+        case '3': // Día (DD)
+            {
+                int day = atoi(&env[4]); // Asumiendo m3=DD
+                // Validar el día
+                if (day >= 1 && day <= 31) { // Necesitas lógica para meses con menos días
+                    set_rtc_day(day); // Función para configurar el día en el RTC
+                }
+            }
+            break;
+
+        case '4': // Hora (HH)
+            {
+                int hour = atoi(&env[4]); // Asumiendo m4=HH
+                // Validar la hora
+                if (hour >= 0 && hour <= 23) {
+                    set_rtc_hour(hour); // Función para configurar la hora en el RTC
+                }
+            }
+            break;
+
+        case '5': // Minutos (MM)
+            {
+                int minute = atoi(&env[4]); // Asumiendo m5=MM
+                // Validar los minutos
+                if (minute >= 0 && minute <= 59) {
+                    set_rtc_minute(minute); // Función para configurar los minutos en el RTC
+                }
+            }
+            break;
+
+        case '6': // Segundos (SS)
+            {
+                int second = atoi(&env[4]); // Asumiendo m6=SS
+                // Validar los segundos
+                if (second >= 0 && second <= 59) {
+                    set_rtc_second(second); // Función para configurar los segundos en el RTC
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
 
     case 'x':
       // AD Input from 'ad.cgx'
